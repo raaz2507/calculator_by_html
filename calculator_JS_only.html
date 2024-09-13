@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator JavaScript only</title>
+  </head>
+  <body>
+    <script>
+      let calcBody = document.createElement("div");
+
+      /*Add Display into calc start*/
+      let display = document.createElement("div");
+      // display.setAttribute("placeholder", "0");
+      // display.setAttribute("readonly", "true");
+      
+      /*Add Display into calc end*/
+      /*Add theame selection opection start*/
+      let themeSel=document.createElement("select");
+      themeSel.style.gridArea="themeSel";
+      let theme=[];
+      for (let i=0; i<3; i++){
+        theme.push(document.createElement("option"));
+        theme[i].setAttribute("value", "theme"+i);
+        theme[i].innerHTML="theme"+i;
+        themeSel.append(theme[i]);  
+      }
+      
+      /*Add theame selection opection end*/
+      /*Add Keys Start*/
+
+      /*create Earthmatic Operation Keys start*/
+      function crtBtn( inText, GridName){
+        let btn=document.createElement("button");
+        btn.innerText=inText;
+        btn.value =inText;
+        btn.setAttribute("id", GridName);
+        btn.style.gridArea=GridName;
+        return btn;
+      }
+      /*create and add 0-9 Keys start*/
+      let numKeys = [];
+      numKeys = Array.from({ length: 10 }, (_, i) => crtBtn(i.toString(), 'k' + i));
+      //for (let i=0; i<10; i++){numKeys.push(crtBtn(i.toString(), 'k'+i));}
+      numKeys.forEach(key=>{ calcBody.appendChild(key) });
+      /*
+      for (let i = 0; i < 10; i++) {
+        numKeys.push(document.createElement("button"));
+        numKeys[i].innerText = i;
+        // numKeys[i].setAttribute("id", "key"+i);
+        // numKeys[i].value= i.toString;
+        calcBody.appendChild(numKeys[i]);
+      }
+      numKeys.forEach((key, i) =>{
+        key.style.gridArea = "k" + i;
+      });
+      */
+      /*create and add 0-9 Keys end*/
+      let opeKeys={
+        plus: {btn:crtBtn("+", "plus"), fun: plusMinusFun}, 
+        minus: {btn:crtBtn("-", 'minus'), fun: plusMinusFun},
+        mul: {btn:crtBtn('x', 'mul'), fun: mulFun},
+        divide: {btn:crtBtn('/','divide'), fun: divideFun},
+        ans: {btn:crtBtn('=', 'ans'), fun: ansFun},
+        das: {btn:crtBtn(".", "das"), fun: dasFun},
+        clr: {btn:crtBtn("C", "clr"), fun: clrFun},
+        bckSpc: {btn:crtBtn("<-", "bckSpc"), fun: bckSpcFun},
+        per: {btn:crtBtn("%", "per"), fun: perFun}
+      };
+      /*
+      let plus= crtBtn("+", "plus");
+      let minus=crtBtn("-", 'minus');
+      let mul=crtBtn('x', 'mul');
+      let divide=crtBtn('/','divide');
+      let ans=crtBtn('=', 'ans');
+      let das=crtBtn(".", "das");
+      let clr=crtBtn("C", "clr");
+      let bckSpc=crtBtn("<-", "bckSpc");
+      let per=crtBtn("%", "per");
+      */
+      /*create Earthmatic Operation Keys end*/
+
+      /*Add ArthMatic Keys start*/
+      Object.values(opeKeys).forEach(key=>{
+        calcBody.appendChild(key.btn);
+      });
+      /*
+      let opeKeys=[plus, minus, mul, divide, ans, das, clr, bckSpc, per];
+      opeKeys.forEach(key=>{
+        calcBody.appendChild(key);
+      });
+      */
+      /*Add ArthMatic Keys end*/
+
+      
+
+      /*Add Keys End*/
+      calcBody.prepend(themeSel);
+      calcBody.prepend(display);
+      document.body.appendChild(calcBody);
+      document.querySelectorAll("*").forEach(element=>{
+        element.style.boxSizing = "border-box";
+      });
+      
+      /*Styling Start*/
+      
+      let bodyS= document.body.style;
+      bodyS.backgroundColor = "blue";
+      bodyS.width="100vw";
+      bodyS.height="100vh";
+      bodyS.display="flex";
+      bodyS.alignItems="center";
+      bodyS.justifyContent="center";
+      let disS=display.style;
+      disS.width="100%";
+      disS.backgroundColor="red";
+      disS.borderRadius= "10px";
+      disS.overflow="scroll";
+      // disS.margin ="auto";
+      // disS.resize= "none";
+      disS.color="white";
+      disS.fontSize="25px";
+      disS.textAlign="end";
+      /*Add Syling to calcBody start*/
+      calcBody.style.width = "40vw";
+    //   calcBody.style.minHeight = "30vw";
+      calcBody.style.padding= "0.5em";
+      calcBody.style.backgroundColor="green";
+      calcBody.style.borderRadius="10px";
+      calcBody.style.margin="auto";
+      /*Grid Styleing start*/
+      display.style.gridArea = "dis";
+      calcBody.style.display = "grid";
+      calcBody.style.gridTemplateColumns = "repeat(4, 1fr)";
+      calcBody.style.gridTemplateRows = "2em 10em repeat(5, 3em)";
+      calcBody.style.gridTemplateAreas = `
+      "themeSel themeSel  . ."
+      "dis dis dis dis"
+      "plus minus mul bckSpc"
+      "k7 k8 k9 clr"
+      "k4 k5 k6 per"
+      "k1 k2 k3 ans"
+      "k0 k0 das divide"
+      `;
+      calcBody.style.gap=".2em";
+      
+    /*Grid Styleing end*/
+    Object.values(opeKeys).forEach(key =>{
+      key.btn.style.background="transparent";
+      // key.style.border="none";
+      key.btn.style.borderRadius="1em";
+    });
+    numKeys.forEach(key =>{
+      key.style.background="none";
+      // key.style.border="none";
+      // key.style.background ="none";
+      // key.style.color="#fff";
+      key.style.borderRadius="1em";
+    });
+    /*Add Syling to calcBody end*/
+    /*Styling End*/
+
+    
+    /*funcnalty of calculator start*/
+    
+    let value=['',''];
+    let finalAns='';
+    let ope='';
+    
+    let history = [];//[{num1:"num1", num2:"value[1]", ope: "ope", ans:"finalAns"}];
+    function clearHistory(){
+      history = [];
+    }
+    function addHistory(){
+      let opeObj={num1:Number(value[0]), num2:Number(value[1]), ope: ope, ans:finalAns};
+      if(!isEmpety()) history.push(opeObj);
+    }
+    function printHistoryOnDis(){
+      let hisText='';
+      history.forEach(obj=>{
+        hisText+=`${obj.num1} ${obj.ope} ${obj.num2} \n ${obj.ans}\n`;;
+      });
+      return hisText;
+    }
+
+    
+    calcBody.addEventListener('click',event=>{
+      opeKeys[event.target.id].fun();
+    });
+    function plusMinusFun(){
+      console.log("this is plus.")
+    }
+    
+    function mulFun(){
+      ope=opeKeys['mul'].btn.value;
+      updateDisplay();
+    }
+    function divideFun(){}
+    function ansFun(){}
+    function dasFun(){}
+    function clrFun(){}
+    function bckSpcFun(){}
+    function perFun(){}
+    /*
+    numKeys.forEach(key=>{
+        key.addEventListener("click", ()=>{
+            value[ ope===''? 0:1 ]+=key.innerText;
+            calcOpe();
+            updateDisplay();
+        });
+    });
+    [plus, minus].forEach( key=>{
+        key.addEventListener("click", ()=>{
+            if(value[0]==='') value[0]=key.innerText;
+            else if(value[0]!=='' && ope!=='') value[1]=key.innerText;
+            else ope=key.innerText;
+            updateDisplay();
+        });
+        
+    });
+    [ mul,divide, per].forEach(key=>{
+      key.addEventListener("click", ()=>{
+        if (!isEmpety()) ope=key.innerText;
+        updateDisplay();
+      })
+    });
+    ans.addEventListener('click', ()=>{
+        if (value[0]!=='' && value[1]!==''){
+            calcOpe();
+            addHistory();
+            reset();
+            updateDisplay();
+        }
+    });
+    let turn=0;// this veriable for clr function
+    clr.addEventListener('click', ()=>{
+      if ( turn == 0 ){
+        reset();
+        turn=1;
+      }else if( turn == 1 ){
+        clearHistory();
+        turn=0;
+      }
+      updateDisplay();
+    });
+    bckSpc.addEventListener('click', ()=>{
+      if( value[1]!=='') value[1]=value[1].slice(0,-1);
+      else if(ope!=='') ope='';
+      else if(value[0]!=='') value[0]=value[0].slice(0,-1);
+      updateDisplay();
+    });
+    */
+    /*fuction defination Start*/
+    function isEmpety(){
+      return value[0]==='';
+    }
+    function reset(){
+      value[0]=value[1]=ope=finalAns='';
+      updateDisplay();
+    }
+    function updateDisplay() {
+      display.innerText =`${printHistoryOnDis()} ${value[0]} ${ope} ${value[1]} \n ${finalAns}`;
+      console.log('v1: '+value[0]);
+      console.log('v2: '+value[1]);
+      console.log('ope: '+ope);
+    }
+    function calcOpe(){
+        let num1=Number(value[0]);
+        let num2=Number(value[1]);
+        switch(ope){
+            case '+':
+                finalAns=num1+num2;
+                break;
+            case '-':
+                finalAns=num1-num2;
+                break;
+            case 'x':
+                finalAns=num1*num2;
+                break;
+            case '/':
+                finalAns=num1/num2;
+                break;
+            case '%':
+                finalAns=(num2/num1)*100;
+                break;
+            default:
+              if (value[0]!=='' && value[1]!=='' && ope!=='')
+                finalAns='error';
+        }
+    }
+    /*function defination End*/
+    /*funcnalty of calculator end*/
+    
+    </script>
+  </body>
+</html>
