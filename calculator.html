@@ -32,7 +32,7 @@
             display:grid;
             grid-template-columns: repeat(4,1fr);
             grid-template-rows: 5vw 15vw repeat(5, 7vw);
-            grid-template-areas:"theme_sel . . ."
+            grid-template-areas:"theme_sel theme_sel . ."
                                 "dis dis dis dis"
                                 "plus minus mul backSlash"
                                 "k7 k8 k9 allClear"
@@ -45,8 +45,9 @@
         #theme_sel{
             background:none;
             border:none;
-            color:azure;
-            margin:2vh;
+            color:rgb(255, 255, 255);
+            font-weight:900;
+            margin-left:2vh;
         }
         #theme_sel > option{
             background:none;
@@ -102,6 +103,10 @@
             font-size:larger;
             font-weight: 900;
         }
+        .theme1 > .numKey:hover{
+            color:aqua;
+            background-color:rgba(245, 71, 245, 1);
+        }
         .theme1 > #display{
             background-color:rgba(0, 255, 255, 0.736);
             border-radius: 0.2em;
@@ -140,7 +145,7 @@
             background-color:rgba(121, 242, 121, 0.8);
         }
         .theme3 > #display{
-            font-size:15vh;
+            font-size:5em;
         }
         /*theme setup end*/
     </style>
@@ -154,7 +159,7 @@
             <option value="3">Theme 3</option>
         </select>
         <div id="display"></div>
-            <button class="numKey" id="plus">+</button>
+            <button class="numKey" id="plus" value="+">+</button>
             <button class="numKey" id="minus">-</button>
             <button class="numKey" id="mul">x</button>
             <button class="numKey" id="devide">/</button>
