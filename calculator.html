@@ -31,7 +31,7 @@
             /* grid-layout */
             display:grid;
             grid-template-columns: repeat(4,1fr);
-            grid-template-rows: 5vw 15vw repeat(5, 7vw);
+            grid-template-rows: 5vw 25vw repeat(5, 7vw);
             grid-template-areas:"theme_sel theme_sel . ."
                                 "dis dis dis dis"
                                 "plus minus mul backSlash"
@@ -55,12 +55,14 @@
         }
         #display{
             grid-area: dis;
-            text-align:end;
+            text-align:right;
             font-family: "dotty";
             /*flex setting*/
             display:flex;
-            align-items:end;
-            justify-content:right;
+            justify-content:flex-end;
+            align-items:flex-end;
+
+            
         }
         #theme_sel{grid-area: theme_sel;}
         #plus{ grid-area:plus;}
@@ -88,7 +90,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-
         }
         /*theme setup start*/
         .theme1 {
@@ -126,7 +127,7 @@
         }
         .theme2 > #display{
             background-color:rgba(31, 42, 50, 0.3);
-            border-radius: 0.2em;
+            border-radius: 10px;
             color:rgba(0, 0, 0, 0.945);
             font-size:15vh;
         }
@@ -158,7 +159,7 @@
             <option value="2">Theme 2</option>
             <option value="3">Theme 3</option>
         </select>
-        <div id="display"></div>
+        <div name="" id="display" ></div>
             <button class="numKey" id="plus" value="+">+</button>
             <button class="numKey" id="minus">-</button>
             <button class="numKey" id="mul">x</button>
@@ -189,25 +190,12 @@
         let ope='';
         let finalAns='';
         let dis=document.getElementById("display");
-        function updateDisplay1() {
+        function updateDisplay() {
             if (typeof finalAns === 'number' && !isNaN(finalAns) && isFinite(finalAns)) {
                 dis.innerHTML = `${value[0]} ${ope} ${value[1]}<br>${finalAns}`;
             } else {
                 dis.innerText = `${value[0]} ${ope} ${value[1]}`;
             }
-        }
-        
-        function updateDisplay(){
-            if (typeof finalAns === 'number'){
-                dis.innerHTML = value[0]+ope+value[1]+'<br>'+finalAns;
-            }else{
-                dis.innerText = value[0]+ope+value[1];
-            }
-            console.log(finalAns);
-            console.log(typeof finalAns);
-            // console.log("v1="+value[0]);
-            // console.log("v2="+value[1]);
-            // console.log("ope="+ope);
         }
         function isEmpty(){
             return value[0] === '';
