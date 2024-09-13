@@ -28,7 +28,6 @@
       /*Add theame selection opection end*/
       /*Add Keys Start*/
 
-      /*create Earthmatic Operation Keys start*/
       function crtBtn( inText, GridName){
         let btn=document.createElement("button");
         btn.innerText=inText;
@@ -41,56 +40,32 @@
       let numKeys = [];
       numKeys = Array.from({ length: 10 }, (_, i) => crtBtn(i.toString(), 'k' + i));
       //for (let i=0; i<10; i++){numKeys.push(crtBtn(i.toString(), 'k'+i));}
-      numKeys.forEach(key=>{ calcBody.appendChild(key) });
-      /*
-      for (let i = 0; i < 10; i++) {
-        numKeys.push(document.createElement("button"));
-        numKeys[i].innerText = i;
-        // numKeys[i].setAttribute("id", "key"+i);
-        // numKeys[i].value= i.toString;
-        calcBody.appendChild(numKeys[i]);
-      }
-      numKeys.forEach((key, i) =>{
-        key.style.gridArea = "k" + i;
-      });
-      */
+      
       /*create and add 0-9 Keys end*/
+      /*create Earthmatic Operation Keys start*/
       let opeKeys={
         plus: {btn:crtBtn("+", "plus"), fun: plusMinusFun}, 
         minus: {btn:crtBtn("-", 'minus'), fun: plusMinusFun},
-        mul: {btn:crtBtn('x', 'mul'), fun: mulFun},
-        divide: {btn:crtBtn('/','divide'), fun: divideFun},
+        mul: {btn:crtBtn('x', 'mul'), fun: mulDividePerFun},
+        divide: {btn:crtBtn('/','divide'), fun: mulDividePerFun},
         ans: {btn:crtBtn('=', 'ans'), fun: ansFun},
         das: {btn:crtBtn(".", "das"), fun: dasFun},
         clr: {btn:crtBtn("C", "clr"), fun: clrFun},
         bckSpc: {btn:crtBtn("<-", "bckSpc"), fun: bckSpcFun},
-        per: {btn:crtBtn("%", "per"), fun: perFun}
+        per: {btn:crtBtn("%", "per"), fun: mulDividePerFun}
       };
-      /*
-      let plus= crtBtn("+", "plus");
-      let minus=crtBtn("-", 'minus');
-      let mul=crtBtn('x', 'mul');
-      let divide=crtBtn('/','divide');
-      let ans=crtBtn('=', 'ans');
-      let das=crtBtn(".", "das");
-      let clr=crtBtn("C", "clr");
-      let bckSpc=crtBtn("<-", "bckSpc");
-      let per=crtBtn("%", "per");
-      */
       /*create Earthmatic Operation Keys end*/
-
-      /*Add ArthMatic Keys start*/
-      Object.values(opeKeys).forEach(key=>{
-        calcBody.appendChild(key.btn);
+      
+      let allKeys={}; //murge all keys to one ovject
+      Object.values(opeKeys).forEach( key=>{
+        allKeys[key.btn.id] = key;
       });
-      /*
-      let opeKeys=[plus, minus, mul, divide, ans, das, clr, bckSpc, per];
-      opeKeys.forEach(key=>{
-        calcBody.appendChild(key);
+      numKeys.forEach(key=>{
+        allKeys[key.id]={btn: key, fun: numKeyFun}
       });
-      */
-      /*Add ArthMatic Keys end*/
-
+      
+      /*Add All Keys to calcBody*/
+      Object.values(allKeys).forEach(key=>{calcBody.appendChild(key.btn);});
       
 
       /*Add Keys End*/
@@ -166,12 +141,12 @@
     let finalAns='';
     let ope='';
     
-    let history = [];//[{num1:"num1", num2:"value[1]", ope: "ope", ans:"finalAns"}];
+    let history = [];
     function clearHistory(){
       history = [];
     }
-    function addHistory(){
-      let opeObj={num1:Number(value[0]), num2:Number(value[1]), ope: ope, ans:finalAns};
+    function addHistory(n1, op, n2, fans){
+      let opeObj={num1:n1, num2:n2, ope: op, ans:fans};
       if(!isEmpety()) history.push(opeObj);
     }
     function printHistoryOnDis(){
@@ -182,88 +157,85 @@
       return hisText;
     }
 
-    
+    //Add Event Lisner to clacBody
     calcBody.addEventListener('click',event=>{
-      opeKeys[event.target.id].fun();
+      allKeys[event.target.id].fun(event);
+      calcOpe();
+      updateDisplay();
     });
-    function plusMinusFun(){
-      console.log("this is plus.")
+    function plusMinusFun(event){
+      let val=event.target.value;
+      console.log(val);
+      if(isEmpetyVal0()) value[0] = val;
+      else if (!isEmpetyVal0() && isEmpetyOpe()) ope = val;
+      else if(!isEmpetyVal0() && !isEmpetyOpe() && isEmpetyVal1()) value[1] = val;
     }
     
-    function mulFun(){
-      ope=opeKeys['mul'].btn.value;
-      updateDisplay();
+    function mulDividePerFun(event){
+      let val=event.target.value;
+      // ope=opeKeys['mul'].btn.value;
+      if (!isEmpetyVal0()) ope= val;
     }
-    function divideFun(){}
-    function ansFun(){}
-    function dasFun(){}
-    function clrFun(){}
-    function bckSpcFun(){}
-    function perFun(){}
-    /*
-    numKeys.forEach(key=>{
-        key.addEventListener("click", ()=>{
-            value[ ope===''? 0:1 ]+=key.innerText;
-            calcOpe();
-            updateDisplay();
-        });
-    });
-    [plus, minus].forEach( key=>{
-        key.addEventListener("click", ()=>{
-            if(value[0]==='') value[0]=key.innerText;
-            else if(value[0]!=='' && ope!=='') value[1]=key.innerText;
-            else ope=key.innerText;
-            updateDisplay();
-        });
-        
-    });
-    [ mul,divide, per].forEach(key=>{
-      key.addEventListener("click", ()=>{
-        if (!isEmpety()) ope=key.innerText;
-        updateDisplay();
-      })
-    });
-    ans.addEventListener('click', ()=>{
-        if (value[0]!=='' && value[1]!==''){
-            calcOpe();
-            addHistory();
-            reset();
-            updateDisplay();
-        }
-    });
-    let turn=0;// this veriable for clr function
-    clr.addEventListener('click', ()=>{
-      if ( turn == 0 ){
+  
+    function ansFun(){
+      if (!isEmpetyVal0() && !isEmpetyOpe() && !isEmpetyVal1() && finalAns!=''){
+        addHistory(value[0], ope, value[1], finalAns);
         reset();
-        turn=1;
-      }else if( turn == 1 ){
-        clearHistory();
-        turn=0;
       }
-      updateDisplay();
-    });
-    bckSpc.addEventListener('click', ()=>{
+    }
+    function dasFun(event){
+      let val=event.target.value;
+      if (isEmpetyVal1() && !value[0].includes('.')) value[0]+=val;
+      else if (!value[1].includes('.')) value[1]+=val;
+    }
+
+    function clrFun(){
+      if (isEmpety()) clearHistory();
+      else reset();
+    }
+    function bckSpcFun(){
+      console.log("bc")
       if( value[1]!=='') value[1]=value[1].slice(0,-1);
       else if(ope!=='') ope='';
       else if(value[0]!=='') value[0]=value[0].slice(0,-1);
-      updateDisplay();
-    });
-    */
+    }
+    
+    function numKeyFun(event){
+      let val=event.target.value;
+      //console.log(val);
+      if (isEmpetyOpe()) value[0]+=val;
+      else if (!isEmpetyVal0()) value[1]+=val;
+    }
+
     /*fuction defination Start*/
+    
+    function isEmpetyVal0(){
+      return value[0]==='' && (value[0]!=='+' || value[0]!=='-');
+    }
+    function isEmpetyVal1(){
+      return value[1]==='' && (value[1]!=='+' || value[1]!=='-');
+    }
+    function isEmpetyOpe(){
+      return ope==='' && ope!=='+' && ope!=='-' && ope!=='x' && ope!=='/' && ope!=='%';
+    }
     function isEmpety(){
-      return value[0]==='';
+      return isEmpetyVal0() && isEmpetyVal1() && isEmpetyOpe();
     }
     function reset(){
       value[0]=value[1]=ope=finalAns='';
       updateDisplay();
     }
     function updateDisplay() {
-      display.innerText =`${printHistoryOnDis()} ${value[0]} ${ope} ${value[1]} \n ${finalAns}`;
+      display.innerText =`${printHistoryOnDis()} ${value[0]} ${ope} ${value[1]} \n = ${finalAns}`;
       console.log('v1: '+value[0]);
       console.log('v2: '+value[1]);
       console.log('ope: '+ope);
+      console.log('val1Check' ,isEmpetyVal0());
+      console.log('val2Check' ,isEmpetyVal1());
+      console.log('opeCheck' ,isEmpetyOpe());
     }
     function calcOpe(){
+      if(isEmpety()) return;
         let num1=Number(value[0]);
         let num2=Number(value[1]);
         switch(ope){
