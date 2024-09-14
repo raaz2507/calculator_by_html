@@ -33,15 +33,31 @@
       /*Add theame selection opection start*/
       let themeSel=document.createElement("select");
       themeSel.style.gridArea="themeSel";
-      let theme=[];
-      for (let i=0; i<3; i++){
-        theme.push(document.createElement("option"));
-        theme[i].setAttribute("value", "theme"+i);
-        theme[i].innerHTML="theme"+i;
-        themeSel.append(theme[i]);  
-      }
       
-      /*Add theame selection opection end*/
+      /*
+      //let theme=Array.from({length:3}, (_, i) => document.createElement("option"));
+      theme.forEach( (thm, i)=>{
+        thm.setAttribute("value", 'theme'+i);
+        thm.innerHTML="theme"+i;
+        thm.style.backgroundColor="none";
+        themeSel.append(thm);
+      });
+      */
+     let theme={};
+     for (let i=0; i<3; i++){
+      theme['theme'+i]={ope: document.createElement('option'), fun:null};
+     }
+     console.log(theme);
+     Object.values(theme).forEach((thm,i)=>{
+        thm.ope.setAttribute("value", 'theme'+i);
+        thm.ope.innerHTML="theme"+i;
+        thm.ope.style.backgroundColor="none";
+        themeSel.append(thm.ope);
+     });
+     theme['theme0'].fun=themeSet1;
+     theme['theme1'].fun=themeSet2;
+     theme['theme2'].fun=themeSet3;
+     /*Add theame selection opection end*/
       /*Add Keys Start*/
 
       function crtBtn( inText, GridName){
@@ -123,10 +139,22 @@
       disS.fontSize="25px";
       disS.textAlign="end";
       //theme 1 styling start
-      bodyS.backgroundColor = "rgb(211, 152, 250)";
-      calcBody.style.backgroundColor="rgba(246, 232, 255, 0.503);";
-      disS.backgroundColor="rgba(215, 104, 255, 0.627)";
-      
+      function themeSet1(){
+        themeSel.style.background="none";
+        themeSel.style.borderRadius=".5em";
+        themeSel.style.color="rgba(255,255,255,.8)";
+        bodyS.backgroundColor = "rgb(211, 152, 250)";
+        calcBody.style.backgroundColor="rgba(246, 232, 255, 0.503);";
+        disS.backgroundColor="rgba(215, 104, 255, 0.627)";
+      }
+      function themeSet2(){
+        calcBody.style.backgroundColor="rgba(26, 23, 25, 0.503);";
+        disS.backgroundColor="rgba(21, 14, 55, 0.627)";
+      }
+      function themeSet3(){
+        calcBody.style.backgroundColor="rgba(96, 32, 155, 0.503);";
+        disS.backgroundColor="rgba(15, 204, 55, 0.627)";
+      }
       //theme 1 styling end
       /*Grid Styleing start*/
       display.style.gridArea = "dis";
@@ -176,23 +204,26 @@
       });
       return hisText;
     }
-
+    theme['theme2'].fun(); //set defult theme
     //Add Event Lisner to clacBody
     calcBody.addEventListener('click',event=>{
-      allKeys[event.target.id].fun(event);
-      calcOpe();
-      updateDisplay();
+      try{
+        allKeys[event.target.id].fun(event.target.value);
+      }catch(e){
+        theme[event.target.value].fun();
+      }finally{
+        calcOpe();
+        updateDisplay();
+      }
+        
     });
-    function plusMinusFun(event){
-      let val=event.target.value;
-      console.log(val);
+    function plusMinusFun(val){
       if(isEmpetyVal0()) value[0] = val;
       else if (!isEmpetyVal0() && isEmpetyOpe()) ope = val;
       else if(!isEmpetyVal0() && !isEmpetyOpe() && isEmpetyVal1()) value[1] = val;
     }
     
-    function mulDividePerFun(event){
-      let val=event.target.value;
+    function mulDividePerFun(val){
       // ope=opeKeys['mul'].btn.value;
       if (!isEmpetyVal0()) ope= val;
     }
@@ -203,8 +234,7 @@
         reset();
       }
     }
-    function dasFun(event){
-      let val=event.target.value;
+    function dasFun(val){
       if (isEmpetyVal1() && !value[0].includes('.')) value[0]+=val;
       else if (!value[1].includes('.')) value[1]+=val;
     }
@@ -214,15 +244,12 @@
       else reset();
     }
     function bckSpcFun(){
-      console.log("bc")
       if( value[1]!=='') value[1]=value[1].slice(0,-1);
       else if(ope!=='') ope='';
       else if(value[0]!=='') value[0]=value[0].slice(0,-1);
     }
     
-    function numKeyFun(event){
-      let val=event.target.value;
-      //console.log(val);
+    function numKeyFun(val){
       if (isEmpetyOpe()) value[0]+=val;
       else if (!isEmpetyVal0()) value[1]+=val;
     }
@@ -260,7 +287,7 @@
       let num2=Number(value[1]);
       calcValue ={
         '+': num1+num2,
-        '-': num1+num2,
+        '-': num1-num2,
         'x': num1*num2,
         '/': num1/num2,
         '%': (num2/num1)*100,
