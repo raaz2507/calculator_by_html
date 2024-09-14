@@ -77,7 +77,7 @@
       });
       
       /*Styling Start*/
-      
+      //body styling start
       let bodyS= document.body.style;
       bodyS.backgroundColor = "blue";
       bodyS.width="100vw";
@@ -85,6 +85,17 @@
       bodyS.display="flex";
       bodyS.alignItems="center";
       bodyS.justifyContent="center";
+      
+      //Calculator Body Styling start
+      
+      calcBody.style.width = "40vh";
+    //   calcBody.style.minHeight = "30vw";
+      calcBody.style.padding= "0.5em";
+      calcBody.style.backgroundColor="green";
+      calcBody.style.borderRadius="10px";
+      calcBody.style.margin="auto";
+
+      //dipaly styling start
       let disS=display.style;
       disS.width="100%";
       disS.backgroundColor="red";
@@ -95,13 +106,7 @@
       disS.color="white";
       disS.fontSize="25px";
       disS.textAlign="end";
-      /*Add Syling to calcBody start*/
-      calcBody.style.width = "40vw";
-    //   calcBody.style.minHeight = "30vw";
-      calcBody.style.padding= "0.5em";
-      calcBody.style.backgroundColor="green";
-      calcBody.style.borderRadius="10px";
-      calcBody.style.margin="auto";
+      
       /*Grid Styleing start*/
       display.style.gridArea = "dis";
       calcBody.style.display = "grid";
@@ -119,19 +124,13 @@
       calcBody.style.gap=".2em";
       
     /*Grid Styleing end*/
-    Object.values(opeKeys).forEach(key =>{
+    //Keys Stying start
+    Object.values(allKeys).forEach(key =>{
       key.btn.style.background="transparent";
       // key.style.border="none";
+      // key.style.color="#fff";
       key.btn.style.borderRadius="1em";
     });
-    numKeys.forEach(key =>{
-      key.style.background="none";
-      // key.style.border="none";
-      // key.style.background ="none";
-      // key.style.color="#fff";
-      key.style.borderRadius="1em";
-    });
-    /*Add Syling to calcBody end*/
     /*Styling End*/
 
     
@@ -226,7 +225,7 @@
       updateDisplay();
     }
     function updateDisplay() {
-      display.innerText =`${printHistoryOnDis()} ${value[0]} ${ope} ${value[1]} \n = ${finalAns}`;
+      display.innerText =`${printHistoryOnDis()} ${value[0]} ${ope} ${value[1]} \n ${finalAns===''? '': '='} ${finalAns}`;
       console.log('v1: '+value[0]);
       console.log('v2: '+value[1]);
       console.log('ope: '+ope);
@@ -236,28 +235,17 @@
     }
     function calcOpe(){
       if(isEmpety()) return;
-        let num1=Number(value[0]);
-        let num2=Number(value[1]);
-        switch(ope){
-            case '+':
-                finalAns=num1+num2;
-                break;
-            case '-':
-                finalAns=num1-num2;
-                break;
-            case 'x':
-                finalAns=num1*num2;
-                break;
-            case '/':
-                finalAns=num1/num2;
-                break;
-            case '%':
-                finalAns=(num2/num1)*100;
-                break;
-            default:
-              if (value[0]!=='' && value[1]!=='' && ope!=='')
-                finalAns='error';
-        }
+      let num1=Number(value[0]);
+      let num2=Number(value[1]);
+      calcValue ={
+        '+': num1+num2,
+        '-': num1+num2,
+        'x': num1*num2,
+        '/': num1/num2,
+        '%': (num2/num1)*100,
+      };
+      finalAns= calcValue[ope];
+      finalAns= finalAns==undefined? '': finalAns;
     }
     /*function defination End*/
     /*funcnalty of calculator end*/
