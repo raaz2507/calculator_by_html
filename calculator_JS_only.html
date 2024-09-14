@@ -3,16 +3,32 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator JavaScript only</title>
+    <style>
+      body{
+        /* background-color: rgb(211, 152, 250); */
+      }
+      #dis{
+        /* background-color: rgba(215, 104, 255, 0.627); */
+        backdrop-filter: blur(10px);
+        padding:.5em;
+        margin-bottom: .5em ;
+      }
+      #clcBody{
+        /* background-color: rgba(246, 232, 255, 0.503); */
+        backdrop-filter : blur(10px);
+        box-shadow: 3px 3px 3px 3px rgba(0, 0, 0, 0.284);
+      }
+    </style>
   </head>
   <body>
     <script>
       let calcBody = document.createElement("div");
-
+      calcBody.setAttribute("id", "clcBody");
       /*Add Display into calc start*/
       let display = document.createElement("div");
       // display.setAttribute("placeholder", "0");
       // display.setAttribute("readonly", "true");
-      
+      display.setAttribute("id", "dis");
       /*Add Display into calc end*/
       /*Add theame selection opection start*/
       let themeSel=document.createElement("select");
@@ -79,7 +95,7 @@
       /*Styling Start*/
       //body styling start
       let bodyS= document.body.style;
-      bodyS.backgroundColor = "blue";
+      
       bodyS.width="100vw";
       bodyS.height="100vh";
       bodyS.display="flex";
@@ -91,14 +107,14 @@
       calcBody.style.width = "40vh";
     //   calcBody.style.minHeight = "30vw";
       calcBody.style.padding= "0.5em";
-      calcBody.style.backgroundColor="green";
+      
       calcBody.style.borderRadius="10px";
-      calcBody.style.margin="auto";
+      // calcBody.style.margin="auto";
 
       //dipaly styling start
       let disS=display.style;
       disS.width="100%";
-      disS.backgroundColor="red";
+      
       disS.borderRadius= "10px";
       disS.overflow="scroll";
       // disS.margin ="auto";
@@ -106,7 +122,12 @@
       disS.color="white";
       disS.fontSize="25px";
       disS.textAlign="end";
+      //theme 1 styling start
+      bodyS.backgroundColor = "rgb(211, 152, 250)";
+      calcBody.style.backgroundColor="rgba(246, 232, 255, 0.503);";
+      disS.backgroundColor="rgba(215, 104, 255, 0.627)";
       
+      //theme 1 styling end
       /*Grid Styleing start*/
       display.style.gridArea = "dis";
       calcBody.style.display = "grid";
@@ -121,7 +142,7 @@
       "k1 k2 k3 ans"
       "k0 k0 das divide"
       `;
-      calcBody.style.gap=".2em";
+      calcBody.style.gap=".5em";
       
     /*Grid Styleing end*/
     //Keys Stying start

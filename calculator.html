@@ -23,7 +23,7 @@
         }
         #calcbody{
             /* position: relative; */
-            width:40vw;
+            width:40vh;
             margin:auto;
             padding: 0.2em;
             border-radius: 1em;
@@ -31,13 +31,8 @@
             /* grid-layout */
             display:grid;
             grid-template-columns: repeat(4,1fr);
-<<<<<<< HEAD
-            grid-template-rows: 5vw 15vw repeat(5, 7vw);
-            grid-template-areas:"theme_sel . . ."
-=======
-            grid-template-rows: 5vw 25vw repeat(5, 7vw);
+            grid-template-rows: 5vh 25vh repeat(5, 8vh);
             grid-template-areas:"theme_sel theme_sel . ."
->>>>>>> origin/master
                                 "dis dis dis dis"
                                 "plus minus mul backSlash"
                                 "k7 k8 k9 allClear"
@@ -50,14 +45,9 @@
         #theme_sel{
             background:none;
             border:none;
-<<<<<<< HEAD
-            color:azure;
-            margin:2vh;
-=======
             color:rgb(255, 255, 255);
             font-weight:900;
             margin-left:2vh;
->>>>>>> origin/master
         }
         #theme_sel > option{
             background:none;
@@ -65,14 +55,6 @@
         }
         #display{
             grid-area: dis;
-<<<<<<< HEAD
-            text-align:end;
-            font-family: "dotty";
-            /*flex setting*/
-            display:flex;
-            align-items:end;
-            justify-content:right;
-=======
             text-align:right;
             font-family: "dotty";
             /*flex setting*/
@@ -81,7 +63,6 @@
             align-items:flex-end;
 
             
->>>>>>> origin/master
         }
         #theme_sel{grid-area: theme_sel;}
         #plus{ grid-area:plus;}
@@ -109,10 +90,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/master
         }
         /*theme setup start*/
         .theme1 {
@@ -127,13 +104,10 @@
             font-size:larger;
             font-weight: 900;
         }
-<<<<<<< HEAD
-=======
         .theme1 > .numKey:hover{
             color:aqua;
             background-color:rgba(245, 71, 245, 1);
         }
->>>>>>> origin/master
         .theme1 > #display{
             background-color:rgba(0, 255, 255, 0.736);
             border-radius: 0.2em;
@@ -143,21 +117,19 @@
         }
 
         .theme2 {
-            background-color:rgb(131, 150, 164);
-            
+            background-color:#36c9ff5b;/*rgb(131, 150, 164); */
+            backdrop-filter: blur(20px);
+            border: 2px #fff solid;
+            box-shadow: 3px 3px 3px 3px #00001d4c;
         }
         .theme2 > .numKey{
-            background-color: rgba(54, 54, 54, 0.6);
-            width:70%;
+            background-color: rgba(54, 54, 54, 0.2);
+            width:100%;
             border-radius:50%;
         }
         .theme2 > #display{
             background-color:rgba(31, 42, 50, 0.3);
-<<<<<<< HEAD
-            border-radius: 0.2em;
-=======
             border-radius: 10px;
->>>>>>> origin/master
             color:rgba(0, 0, 0, 0.945);
             font-size:15vh;
         }
@@ -176,30 +148,21 @@
             background-color:rgba(121, 242, 121, 0.8);
         }
         .theme3 > #display{
-<<<<<<< HEAD
-            font-size:15vh;
-=======
             font-size:5em;
->>>>>>> origin/master
         }
         /*theme setup end*/
     </style>
 </head>
 <body>
     
-    <div class="theme3" id="calcbody">
+    <div class="theme2" id="calcbody">
         <select id="theme_sel" name="themeSelector" size='1'>
             <option value="1">Theme 1</option>
             <option value="2">Theme 2</option>
             <option value="3">Theme 3</option>
         </select>
-<<<<<<< HEAD
-        <div id="display"></div>
-            <button class="numKey" id="plus">+</button>
-=======
         <div name="" id="display" ></div>
             <button class="numKey" id="plus" value="+">+</button>
->>>>>>> origin/master
             <button class="numKey" id="minus">-</button>
             <button class="numKey" id="mul">x</button>
             <button class="numKey" id="devide">/</button>
@@ -229,33 +192,13 @@
         let ope='';
         let finalAns='';
         let dis=document.getElementById("display");
-<<<<<<< HEAD
-        function updateDisplay1() {
-=======
         function updateDisplay() {
->>>>>>> origin/master
             if (typeof finalAns === 'number' && !isNaN(finalAns) && isFinite(finalAns)) {
                 dis.innerHTML = `${value[0]} ${ope} ${value[1]}<br>${finalAns}`;
             } else {
                 dis.innerText = `${value[0]} ${ope} ${value[1]}`;
             }
         }
-<<<<<<< HEAD
-        
-        function updateDisplay(){
-            if (typeof finalAns === 'number'){
-                dis.innerHTML = value[0]+ope+value[1]+'<br>'+finalAns;
-            }else{
-                dis.innerText = value[0]+ope+value[1];
-            }
-            console.log(finalAns);
-            console.log(typeof finalAns);
-            // console.log("v1="+value[0]);
-            // console.log("v2="+value[1]);
-            // console.log("ope="+ope);
-        }
-=======
->>>>>>> origin/master
         function isEmpty(){
             return value[0] === '';
         }
